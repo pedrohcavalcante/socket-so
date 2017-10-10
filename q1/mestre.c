@@ -10,6 +10,7 @@
 
 #define BUFLEN 512
 #define SRV_IP "127.0.0.1"
+#define TAM 3
 
 int main (int argc, char * argv[]) {
 	struct sockaddr_in escravoA, escravoB, escravoC;
@@ -18,15 +19,19 @@ int main (int argc, char * argv[]) {
 	socklen_t slenB = sizeof(escravoB);
 	socklen_t slenC = sizeof(escravoC);
 
-	int portaA = atoi (argv[1]);
-	int portaB = portaA++;
-	int portaC = portaB++;
+	int port_in = atoi (argv[1]);
+	int portaA = port_in;
+	int portaB = port_in + 1;
+	int portaC = port_in + 2;
 
 	int* vetorA;
 	int* vetorB;
 	int* vetorC;
 	
-	int TAM = 3; // atoi (argv[2])
+	vetorA = malloc (sizeof(int) * TAM);
+	vetorB = malloc (sizeof(int) * TAM);
+	vetorC = malloc (sizeof(int) * TAM);
+	// int TAM = atoi (argv[2]);
 	
 	int matriz[TAM][TAM];
 
@@ -77,10 +82,21 @@ int main (int argc, char * argv[]) {
 			matriz[i][j] = rand() % 100;
 		}
 	}
-	vetorA = &matriz[0][0];
-	vetorB = &matriz[1][0];
-	vetorC = &matriz[2][0];
 
+	for (int i = 0; i < TAM; i++) {
+		for (int j = 0; j < TAM; j++) {
+			if (i == 0) {
+				vetorA[j] = matriz[i][j];
+			}
+			else if (i == 1) {
+				vetorB[j] = matriz[i][j];
+			}
+			else {
+				vetorC[j] = matriz[i][j];
+			}
+		}
+	}
+	
 	// ENVIANDO PACOTE PARA ESCRAVO A
 	if (sendto(sockA, &vetorA, sizeof(int) * TAM, 0, (struct sockaddr *) &escravoA, slenA) == -1) {
 		printf("Erro ao enviar pacote.\n");
