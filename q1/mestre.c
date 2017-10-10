@@ -6,6 +6,7 @@
 #include <sys/types.h>
 #include <string.h>
 #include <arpa/inet.h>
+#include <time.h>
 
 #define BUFLEN 512
 #define SRV_IP "127.0.0.1"
@@ -27,4 +28,73 @@ int main (int argc, char * argv[]) {
 	
 	int TAM = 3; // atoi (argv[2])
 	
+	int matriz[TAM][TAM];
+
+	sockA = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+	if (sockA == -1) {
+		printf("Erro ao criar socket.\n");
+		return 1;
+	}
+	sockB = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+	if (sockB == -1) {
+		printf("Erro ao criar socket.\n");
+		return 1;
+	}
+	sockC = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+	if (sockC == -1) {
+		printf("Erro ao criar socket.\n");
+		return 1;
+	}
+
+	memset((char*) &escravoA, 0, sizeof(escravoA));
+	escravoA.sin_family = AF_INET;
+	escravoA.sin_port = htons(portaA);
+	if (inet_aton (SRV_IP, &escravoA.sin_addr) == 0) {
+		printf("Erro ao transformar endereco.\n");
+		return 1;
+	}
+
+	memset((char*) &escravoB, 0, sizeof(escravoB));
+	escravoB.sin_family = AF_INET;
+	escravoB.sin_port = htons(portaB);
+	if (inet_aton (SRV_IP, &escravoB.sin_addr) == 0) {
+		printf("Erro ao transformar endereco.\n");
+		return 1;
+	}
+	memset((char*) &escravoC, 0, sizeof(escravoC));
+	escravoC.sin_family = AF_INET;
+	escravoC.sin_port = htons(portaC);
+	if (inet_aton (SRV_IP, &escravoC.sin_addr) == 0) {
+		printf("Erro ao transformar endereco.\n");
+		return 1;
+	}
+
+	// INICIALIZANDO MATRIZ
+	
+	srand(time(NULL));
+	for (int i = 0; i < TAM; i++) {
+		for (int j = 0; j < TAM; j++) {
+			matriz[i][j] = rand() % 100;
+		}
+	}
+	vetorA = &matriz[0][0];
+	vetorB = &matriz[1][0];
+	vetorC = &matriz[2][0];
+
+	// ENVIANDO PACOTE PARA ESCRAVO A
+	if (sendto(sockA, &vetorA, sizeof(int) * TAM, 0, (struct sockaddr *) &escravoA, slenA) == -1) {
+		printf("Erro ao enviar pacote.\n");
+		return 1;
+	}
+	// ENVIANDO PACOTE PARA ESCRAVO B
+	if (sendto(sockB, &vetorB, sizeof(int) * TAM, 0, (struct sockaddr *) &escravoB, slenB) == -1) {
+		printf("Erro ao enviar pacote.\n");
+		return 1;
+	}
+	// ENVIANDO PACOTE PARA O ESCRAVO C
+	if (sendto(sockC, &vetorC, sizeof(int) * TAM, 0, (struct sockaddr *) &escravoC, slenC) == -1) {
+		printf("Erro ao enviar pacote.\n");
+		return 1;
+	}
+	return 0;
 }
