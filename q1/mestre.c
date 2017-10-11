@@ -19,6 +19,8 @@ int main (int argc, char * argv[]) {
 	socklen_t slenB = sizeof(escravoB);
 	socklen_t slenC = sizeof(escravoC);
 
+	char buf[BUFLEN];
+
 	int port_in = atoi (argv[1]);
 	int portaA = port_in;
 	int portaB = port_in + 1;
@@ -33,7 +35,9 @@ int main (int argc, char * argv[]) {
 	vetorC = malloc (sizeof(int) * TAM);
 	// int TAM = atoi (argv[2]);
 	
-	int matriz[TAM][TAM];
+	int matrizA[TAM][TAM];
+	int matrizB[TAM][TAM];
+
 
 	sockA = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
 	if (sockA == -1) {
@@ -79,38 +83,167 @@ int main (int argc, char * argv[]) {
 	srand(time(NULL));
 	for (int i = 0; i < TAM; i++) {
 		for (int j = 0; j < TAM; j++) {
-			matriz[i][j] = rand() % 100;
+			matrizA[i][j] = rand() % 100;
+			matrizB[i][j] = rand() % 500;
 		}
 	}
 
 	for (int i = 0; i < TAM; i++) {
 		for (int j = 0; j < TAM; j++) {
 			if (i == 0) {
-				vetorA[j] = matriz[i][j];
+				vetorA[j] = matrizA[i][j];
 			}
 			else if (i == 1) {
-				vetorB[j] = matriz[i][j];
+				vetorB[j] = matrizA[i][j];
 			}
 			else {
-				vetorC[j] = matriz[i][j];
+				vetorC[j] = matrizA[i][j];
 			}
 		}
 	}
 	
+	printf("PRINTANDO A MATRIZ A:\n");
+	for (int i = 0; i < TAM; i++) {
+		if (i == TAM - 1) {
+			printf("%d\n", vetorA[i]);
+		}
+		else {
+			printf("%d ", vetorA[i]);
+		}
+	}
+	for (int i = 0; i < TAM; i++) {
+		if (i == TAM - 1) {
+			printf("%d\n", vetorB[i]);
+		}
+		else {
+			printf("%d ", vetorB[i]);
+		}
+	}
+	for (int i = 0; i < TAM; i++) {
+		if (i == TAM - 1) {
+			printf("%d\n", vetorC[i]);
+		}
+		else {
+			printf("%d ", vetorC[i]);
+		}
+	}
+	printf("\n");
+	
+
 	// ENVIANDO PACOTE PARA ESCRAVO A
-	if (sendto(sockA, &vetorA, sizeof(int) * TAM, 0, (struct sockaddr *) &escravoA, slenA) == -1) {
+	if (sendto(sockA, vetorA, sizeof(int) * TAM, 0, (struct sockaddr *) &escravoA, slenA) == -1) {
 		printf("Erro ao enviar pacote.\n");
 		return 1;
 	}
 	// ENVIANDO PACOTE PARA ESCRAVO B
-	if (sendto(sockB, &vetorB, sizeof(int) * TAM, 0, (struct sockaddr *) &escravoB, slenB) == -1) {
+	if (sendto(sockB, vetorB, sizeof(int) * TAM, 0, (struct sockaddr *) &escravoB, slenB) == -1) {
 		printf("Erro ao enviar pacote.\n");
 		return 1;
 	}
 	// ENVIANDO PACOTE PARA O ESCRAVO C
-	if (sendto(sockC, &vetorC, sizeof(int) * TAM, 0, (struct sockaddr *) &escravoC, slenC) == -1) {
+	if (sendto(sockC, vetorC, sizeof(int) * TAM, 0, (struct sockaddr *) &escravoC, slenC) == -1) {
 		printf("Erro ao enviar pacote.\n");
 		return 1;
 	}
+
+	for (int i = 0; i < TAM; i++) {
+		for (int j = 0; j < TAM; j++) {
+			if (i == 0) {
+				vetorA[j] = matrizB[i][j];
+			}
+			else if (i == 1) {
+				vetorB[j] = matrizB[i][j];
+			}
+			else {
+				vetorC[j] = matrizB[i][j];
+			}
+		}
+	}
+
+	printf("PRINTANDO A MATRIZ B:\n");
+	for (int i = 0; i < TAM; i++) {
+		if (i == TAM - 1) {
+			printf("%d\n", vetorA[i]);
+		}
+		else {
+			printf("%d ", vetorA[i]);
+		}
+	}
+	for (int i = 0; i < TAM; i++) {
+		if (i == TAM - 1) {
+			printf("%d\n", vetorB[i]);
+		}
+		else {
+			printf("%d ", vetorB[i]);
+		}
+	}
+	for (int i = 0; i < TAM; i++) {
+		if (i == TAM - 1) {
+			printf("%d\n", vetorC[i]);
+		}
+		else {
+			printf("%d ", vetorC[i]);
+		}
+	}
+	printf("\n");
+
+
+	if (sendto(sockA, vetorA, sizeof(int) * TAM, 0, (struct sockaddr *) &escravoA, slenA) == -1) {
+		printf("Erro ao enviar pacote.\n");
+		return 1;
+	}
+	// ENVIANDO PACOTE PARA ESCRAVO B
+	if (sendto(sockB, vetorA, sizeof(int) * TAM, 0, (struct sockaddr *) &escravoB, slenB) == -1) {
+		printf("Erro ao enviar pacote.\n");
+		return 1;
+	}
+	// ENVIANDO PACOTE PARA O ESCRAVO C
+	if (sendto(sockC, vetorA, sizeof(int) * TAM, 0, (struct sockaddr *) &escravoC, slenC) == -1) {
+		printf("Erro ao enviar pacote.\n");
+		return 1;
+	}
+
+	if (sendto(sockA, vetorB, sizeof(int) * TAM, 0, (struct sockaddr *) &escravoA, slenA) == -1) {
+		printf("Erro ao enviar pacote.\n");
+		return 1;
+	}
+	// ENVIANDO PACOTE PARA ESCRAVO B
+	if (sendto(sockB, vetorB, sizeof(int) * TAM, 0, (struct sockaddr *) &escravoB, slenB) == -1) {
+		printf("Erro ao enviar pacote.\n");
+		return 1;
+	}
+	// ENVIANDO PACOTE PARA O ESCRAVO C
+	if (sendto(sockC, vetorB, sizeof(int) * TAM, 0, (struct sockaddr *) &escravoC, slenC) == -1) {
+		printf("Erro ao enviar pacote.\n");
+		return 1;
+	}
+
+	if (sendto(sockA, vetorC, sizeof(int) * TAM, 0, (struct sockaddr *) &escravoA, slenA) == -1) {
+		printf("Erro ao enviar pacote.\n");
+		return 1;
+	}
+	// ENVIANDO PACOTE PARA ESCRAVO B
+	if (sendto(sockB, vetorC, sizeof(int) * TAM, 0, (struct sockaddr *) &escravoB, slenB) == -1) {
+		printf("Erro ao enviar pacote.\n");
+		return 1;
+	}
+	// ENVIANDO PACOTE PARA O ESCRAVO C
+	if (sendto(sockC, vetorC, sizeof(int) * TAM, 0, (struct sockaddr *) &escravoC, slenC) == -1) {
+		printf("Erro ao enviar pacote.\n");
+		return 1;
+	}
+
+	recvfrom(sockA, buf, BUFLEN, 0, (struct sockaddr *) &escravoA, &slenA);
+  	printf("Pacote recebido de %s: %d\nDado: %s\n", inet_ntoa(escravoA.sin_addr), ntohs(escravoA.sin_port), buf);
+  	close(sockA);
+
+ 	recvfrom(sockB, buf, BUFLEN, 0, (struct sockaddr *) &escravoB, &slenB);
+  	printf("Pacote recebido de %s: %d\nDado: %s\n", inet_ntoa(escravoB.sin_addr), ntohs(escravoB.sin_port), buf);
+  	close(sockB);
+
+ 	recvfrom(sockC, buf, BUFLEN, 0, (struct sockaddr *) &escravoC, &slenC);
+  	printf("Pacote recebido de %s: %d\nDado: %s\n", inet_ntoa(escravoC.sin_addr), ntohs(escravoC.sin_port), buf);
+  	close(sockC);
+	
 	return 0;
 }

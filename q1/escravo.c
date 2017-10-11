@@ -23,6 +23,9 @@ int main (int argc, char * argv[]) {
 	// int TAM = atoi(argv[2]);
 	
 	int vetor[TAM] = {-1,-1,-1};
+	int vetorA_Matriz[TAM] = {-1,-1,-1};
+	int vetorB_Matriz[TAM] = {-1,-1,-1};
+	int vetorC_Matriz[TAM] = {-1,-1,-1};
 	
 	sock_res = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
 	if (sock_res == -1) {
@@ -40,12 +43,38 @@ int main (int argc, char * argv[]) {
 	}
 
 	if (recvfrom(sock_res, &vetor, sizeof(int) * TAM, 0, (struct sockaddr *) &mestre, &slen) == -1) {
-		printf("Erro ao receber dado.\n");
+		printf("Erro ao receber linha.\n");
 	}
 
 	for (int i = 0; i < TAM; i++) {
 		printf("PACOTE RECEBIDO DE %s: %d\nDADO: %d\n", inet_ntoa(mestre.sin_addr), htons(mestre.sin_port), vetor[i]);
 	}
+
+	if (recvfrom(sock_res, &vetorA_Matriz, sizeof(int) * TAM, 0, (struct sockaddr *) &mestre, &slen) == -1) {
+		printf("Erro ao receber matriz.\n");
+	}
+
+	for (int i = 0; i < TAM; i++) {
+		printf("PACOTE RECEBIDO DE %s: %d\nDADO: %d\n", inet_ntoa(mestre.sin_addr), htons(mestre.sin_port), vetorA_Matriz[i]);
+	}
+
+	if (recvfrom(sock_res, &vetorB_Matriz, sizeof(int) * TAM, 0, (struct sockaddr *) &mestre, &slen) == -1) {
+		printf("Erro ao receber matriz.\n");
+	}
+
+	for (int i = 0; i < TAM; i++) {
+		printf("PACOTE RECEBIDO DE %s: %d\nDADO: %d\n", inet_ntoa(mestre.sin_addr), htons(mestre.sin_port), vetorB_Matriz[i]);
+	}
+
+	if (recvfrom(sock_res, &vetorC_Matriz, sizeof(int) * TAM, 0, (struct sockaddr *) &mestre, &slen) == -1) {
+		printf("Erro ao receber matriz.\n");
+	}
+
+	for (int i = 0; i < TAM; i++) {
+		printf("PACOTE RECEBIDO DE %s: %d\nDADO: %d\n", inet_ntoa(mestre.sin_addr), htons(mestre.sin_port), vetorC_Matriz[i]);
+	}
+	sprintf (buf, "Escravo na porta #%d", htons(mestre.sin_port));
+	sendto(sock_res, buf, BUFLEN, 0, (struct sockaddr *) &mestre, slen);
 
 	return 0;
 }
