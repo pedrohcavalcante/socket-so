@@ -10,6 +10,38 @@
 #define BUFLEN 512
 #define TAM 3
 
+int* calculaMatriz (int* a, int szA, int* b, int szB, int* c, int szC, int* d, int szD, int* e, int szE) {
+	for (int i = 0; i < TAM; i++) {
+		for (int j = 0; j < TAM; j++) {
+			if (i == 0) {
+				e[i] += a[j]*b[j];
+			}
+			else if (i == 1) {
+				e[i] += a[j]*c[j];	
+			}
+			else {
+				e[i] += a[j]*d[j];
+			}
+		}
+	}
+	return e;
+}
+
+void print_vet (int * vet, int size) {
+	int i = 0;
+	printf("[");
+	while (i < TAM) {
+		if (i == TAM - 1) {
+			printf("%d]\n", vet[i]);
+		}
+		else {
+			printf("%d ", vet[i]);
+
+		}
+		i++;
+	}
+}
+
 int main (int argc, char * argv[]) {
 	
 	struct sockaddr_in mestre;
@@ -26,6 +58,7 @@ int main (int argc, char * argv[]) {
 	int vetorA_Matriz[TAM] = {-1,-1,-1};
 	int vetorB_Matriz[TAM] = {-1,-1,-1};
 	int vetorC_Matriz[TAM] = {-1,-1,-1};
+	int vetor_f[TAM] = {0};
 	
 	sock_res = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
 	if (sock_res == -1) {
@@ -74,8 +107,9 @@ int main (int argc, char * argv[]) {
 		printf("PACOTE RECEBIDO DE %s: %d\nDADO: %d\n", inet_ntoa(mestre.sin_addr), htons(mestre.sin_port), vetorC_Matriz[i]);
 	}
 
-	sprintf (buf, "Escravo na porta #%d", htons(mestre.sin_port));
-	sendto(sock_res, buf, BUFLEN, 0, (struct sockaddr *) &mestre, slen);
+	int* valor = calculaMatriz(vetor, TAM, vetorA_Matriz, TAM, vetorB_Matriz, TAM, vetorC_Matriz, TAM, vetor_f, TAM);
+	print_vet(valor, TAM);
+	sendto(sock_res, &valor, sizeof(int) * TAM, 0, (struct sockaddr *) &mestre, slen);
 
 	return 0;
 }

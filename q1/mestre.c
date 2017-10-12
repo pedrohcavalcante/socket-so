@@ -64,9 +64,8 @@ int main (int argc, char * argv[]) {
 	vetorC = malloc (sizeof(int) * TAM);
 
 	
-	int matrizA[TAM][TAM];
-	int matrizB[TAM][TAM];
-
+	int matrizA[TAM][TAM] = {{0, 1, 2}, {3, 4, 5}, {6, 7, 8}};
+	int matrizB[TAM][TAM] = {{8, 7, 6}, {5, 4, 3}, {2, 1, 0}};
 
 	sockA = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
 	if (sockA == -1) {
@@ -108,7 +107,7 @@ int main (int argc, char * argv[]) {
 	}
 
 	// INICIALIZANDO AS MATRIZES
-	
+	/*
 	srand(time(NULL));
 	for (int i = 0; i < TAM; i++) {
 		for (int j = 0; j < TAM; j++) {
@@ -116,6 +115,7 @@ int main (int argc, char * argv[]) {
 			matrizB[i][j] = rand() % 500;
 		}
 	}
+	*/
 
 	// ASSOCIACAO COM MATRIZ A
 	for (int i = 0; i < TAM; i++) {
@@ -219,16 +219,31 @@ int main (int argc, char * argv[]) {
 		return 1;
 	}
 
-	recvfrom(sockA, buf, BUFLEN, 0, (struct sockaddr *) &escravoA, &slenA);
-  	printf("Pacote recebido de %s: %d\nDado: %s\n", inet_ntoa(escravoA.sin_addr), ntohs(escravoA.sin_port), buf);
+	free(vetorA);
+	free(vetorB);
+	free(vetorC);
+
+	vetorA = malloc (sizeof(int) * TAM);
+	vetorB = malloc (sizeof(int) * TAM);
+	vetorC = malloc (sizeof(int) * TAM);
+
+
+	recvfrom(sockA, &vetorA, sizeof(int) * TAM, 0, (struct sockaddr *) &escravoA, &slenA);
+  	for (int i = 0; i < TAM; i ++) {
+	  	printf("Pacote recebido de %s: %d\nDado: %d\n", inet_ntoa(escravoA.sin_addr), ntohs(escravoA.sin_port), vetorA[i]);
+  	}
   	close(sockA);
 
- 	recvfrom(sockB, buf, BUFLEN, 0, (struct sockaddr *) &escravoB, &slenB);
-  	printf("Pacote recebido de %s: %d\nDado: %s\n", inet_ntoa(escravoB.sin_addr), ntohs(escravoB.sin_port), buf);
+ 	recvfrom(sockB, &vetorB, sizeof(int) * TAM, 0, (struct sockaddr *) &escravoB, &slenB);
+  	for (int i = 0; i < TAM; i ++) {
+	  	printf("Pacote recebido de %s: %d\nDado: %d\n", inet_ntoa(escravoB.sin_addr), ntohs(escravoB.sin_port), vetorB[i]);
+  	}
   	close(sockB);
 
- 	recvfrom(sockC, buf, BUFLEN, 0, (struct sockaddr *) &escravoC, &slenC);
-  	printf("Pacote recebido de %s: %d\nDado: %s\n", inet_ntoa(escravoC.sin_addr), ntohs(escravoC.sin_port), buf);
+ 	recvfrom(sockC, &vetorB, sizeof(int) * TAM, 0, (struct sockaddr *) &escravoC, &slenC);
+   	for (int i = 0; i < TAM; i ++) {
+	 	printf("Pacote recebido de %s: %d\nDado: %d\n", inet_ntoa(escravoC.sin_addr), ntohs(escravoC.sin_port), vetorC[i]);
+  	}
   	close(sockC);
 	
 	return 0;
