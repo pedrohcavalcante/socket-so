@@ -223,26 +223,25 @@ int main (int argc, char * argv[]) {
 	free(vetorB);
 	free(vetorC);
 
-	vetorA = malloc (sizeof(int) * TAM);
-	vetorB = malloc (sizeof(int) * TAM);
-	vetorC = malloc (sizeof(int) * TAM);
+	int vA[TAM] = {-1, -1, -1};
+	int vB[TAM] = {-1, -1, -1};
+	int vC[TAM] = {-1, -1, -1};
 
-
-	recvfrom(sockA, &vetorA, sizeof(int) * TAM, 0, (struct sockaddr *) &escravoA, &slenA);
-  	for (int i = 0; i < TAM; i ++) {
-	  	printf("Pacote recebido de %s: %d\nDado: %d\n", inet_ntoa(escravoA.sin_addr), ntohs(escravoA.sin_port), vetorA[i]);
+	recvfrom(sockA, vA, sizeof(int) * TAM, 0, (struct sockaddr *) &escravoA, &slenA);
+  	for (int i = 0; i < TAM; i++) {
+	  	printf("Pacote recebido de %s: %d\nDado: %d\n", inet_ntoa(escravoA.sin_addr), ntohs(escravoA.sin_port), vA[i]);
   	}
   	close(sockA);
 
- 	recvfrom(sockB, &vetorB, sizeof(int) * TAM, 0, (struct sockaddr *) &escravoB, &slenB);
-  	for (int i = 0; i < TAM; i ++) {
-	  	printf("Pacote recebido de %s: %d\nDado: %d\n", inet_ntoa(escravoB.sin_addr), ntohs(escravoB.sin_port), vetorB[i]);
+ 	recvfrom(sockB, vB, sizeof(int) * TAM, 0, (struct sockaddr *) &escravoB, &slenB);
+  	for (int i = 0; i < TAM; i++) {
+	  	printf("Pacote recebido de %s: %d\nDado: %d\n", inet_ntoa(escravoB.sin_addr), ntohs(escravoB.sin_port), vB[i]);
   	}
   	close(sockB);
 
- 	recvfrom(sockC, &vetorB, sizeof(int) * TAM, 0, (struct sockaddr *) &escravoC, &slenC);
-   	for (int i = 0; i < TAM; i ++) {
-	 	printf("Pacote recebido de %s: %d\nDado: %d\n", inet_ntoa(escravoC.sin_addr), ntohs(escravoC.sin_port), vetorC[i]);
+ 	recvfrom(sockC, vC, sizeof(int) * TAM, 0, (struct sockaddr *) &escravoC, &slenC);
+   	for (int i = 0; i < TAM; i++) {
+	 	printf("Pacote recebido de %s: %d\nDado: %d\n", inet_ntoa(escravoC.sin_addr), ntohs(escravoC.sin_port), vC[i]);
   	}
   	close(sockC);
 	
