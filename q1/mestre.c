@@ -227,19 +227,19 @@ int main (int argc, char * argv[]) {
 	int vB[TAM] = {-1, -1, -1};
 	int vC[TAM] = {-1, -1, -1};
 
-	recvfrom(sockA, vA, sizeof(int) * TAM, 0, (struct sockaddr *) &escravoA, &slenA);
+	recvfrom(sockA, &vA, sizeof(int) * TAM, 0, (struct sockaddr *) &escravoA, &slenA);
   	for (int i = 0; i < TAM; i++) {
 	  	printf("Pacote recebido de %s: %d\nDado: %d\n", inet_ntoa(escravoA.sin_addr), ntohs(escravoA.sin_port), vA[i]);
   	}
   	close(sockA);
 
- 	recvfrom(sockB, vB, sizeof(int) * TAM, 0, (struct sockaddr *) &escravoB, &slenB);
+ 	recvfrom(sockB, &vB, sizeof(int) * TAM, 0, (struct sockaddr *) &escravoB, &slenB);
   	for (int i = 0; i < TAM; i++) {
 	  	printf("Pacote recebido de %s: %d\nDado: %d\n", inet_ntoa(escravoB.sin_addr), ntohs(escravoB.sin_port), vB[i]);
   	}
   	close(sockB);
 
- 	recvfrom(sockC, vC, sizeof(int) * TAM, 0, (struct sockaddr *) &escravoC, &slenC);
+ 	recvfrom(sockC, &vC, sizeof(int) * TAM, 0, (struct sockaddr *) &escravoC, &slenC);
    	for (int i = 0; i < TAM; i++) {
 	 	printf("Pacote recebido de %s: %d\nDado: %d\n", inet_ntoa(escravoC.sin_addr), ntohs(escravoC.sin_port), vC[i]);
   	}
