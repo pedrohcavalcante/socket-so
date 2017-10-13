@@ -64,8 +64,8 @@ int main (int argc, char * argv[]) {
 	vetorC = malloc (sizeof(int) * TAM);
 
 	
-	int matrizA[TAM][TAM] = {{0, 1, 2}, {3, 4, 5}, {6, 7, 8}};
-	int matrizB[TAM][TAM] = {{8, 7, 6}, {5, 4, 3}, {2, 1, 0}};
+	int matrizA[TAM][TAM];
+	int matrizB[TAM][TAM];
 
 	sockA = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
 	if (sockA == -1) {
@@ -107,7 +107,6 @@ int main (int argc, char * argv[]) {
 	}
 
 	// INICIALIZANDO AS MATRIZES
-	/*
 	srand(time(NULL));
 	for (int i = 0; i < TAM; i++) {
 		for (int j = 0; j < TAM; j++) {
@@ -115,7 +114,6 @@ int main (int argc, char * argv[]) {
 			matrizB[i][j] = rand() % 500;
 		}
 	}
-	*/
 
 	// ASSOCIACAO COM MATRIZ A
 	for (int i = 0; i < TAM; i++) {
@@ -244,6 +242,27 @@ int main (int argc, char * argv[]) {
 	 	printf("Pacote recebido de %s: %d\nDado: %d\n", inet_ntoa(escravoC.sin_addr), ntohs(escravoC.sin_port), vC[i]);
   	}
   	close(sockC);
+
+  	int matriz_res[TAM][TAM];
+
+  	for (int i = 0; i < TAM; i++) {
+  		for (int j = 0; j < TAM; j++) {
+  			if (i == 0) {
+  				matriz_res[i][j] = vA[j];
+  			}
+  			else if (i == 1) {
+  				matriz_res[i][j] = vB[j];
+  			}
+  			else {
+  				matriz_res[i][j] = vC[j];
+  			}
+  		}
+  	}
+  	printf("\n");
+  	printf("MATRIZ RESULTADO:\n");
+  	printf("\n");
+  	print_matriz(TAM, TAM, matriz_res);
+  	printf("\n");
 	
 	return 0;
 }

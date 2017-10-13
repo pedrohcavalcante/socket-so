@@ -108,7 +108,6 @@ int main (int argc, char * argv[]) {
 	}
 
 	int* valor = calculaMatriz(vetor, TAM, vetorA_Matriz, TAM, vetorB_Matriz, TAM, vetorC_Matriz, TAM, vetor_f, TAM);
-	print_vet(valor, TAM);
 	
 	sendto(sock_res, valor, sizeof(int) * TAM, 0, (struct sockaddr *) &mestre, slen);
 
