@@ -67,6 +67,10 @@ int main (int argc, char* argv[]) {
 	struct sockaddr_in escravo[TAM];
 
 	for (int i = 0; i < TAM; i++) {
+		slen[i] = sizeof(escravo[i]);
+	}
+
+	for (int i = 0; i < TAM; i++) {
 		sock[i] = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
 		if (sock[i] == -1) {
 			printf("Erro ao criar o socket.\n");
@@ -82,6 +86,18 @@ int main (int argc, char* argv[]) {
 			return 1;
 		}
 	}
+	int vetor[TAM];
+
+	for (int i = 0; i < TAM; i++) {
+		for (int j = 0; j < TAM; j++) {
+			vetor[j] = matrizA[i][j];
+		}
+
+		if (sendto(sock[i], vetor, sizeof(int) * TAM, 0, (struct sockaddr *) &escravo[i], slen[i]) == -1) {
+			printf("Erro ao enviar pacote.\n");
+			return 1;
+		}
+ 	}
 	return 0;
 
 }
