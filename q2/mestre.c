@@ -108,6 +108,17 @@ int main (int argc, char* argv[]) {
 			return 1;
 		}
  	}
+ 	for (int i = 0; i < TAM; i++) {
+ 		for (int j = 0; j < TAM; j++) {
+ 			vetor[j] = matrizB[i][j];
+ 		}
+ 		for (int j = 0; j < TAM; j++) {
+ 			if (sendto(sock[j], vetor, sizeof(int) * TAM, 0, (struct sockaddr *) &escravo[j], slen[j]) == -1) {
+ 				printf("Erro ao enviar matriz.\n");
+ 				return 1;
+ 			}
+ 		}
+ 	}
 	return 0;
 
 }
