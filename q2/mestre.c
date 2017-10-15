@@ -62,6 +62,12 @@ int main (int argc, char* argv[]) {
 			matrizB[i][j] = (rand() % 50) + 50;
 		}
 	}
+	printf("\n");
+	print_matriz (TAM, TAM, matrizA);
+	printf("\n");
+	print_matriz (TAM, TAM, matrizB);
+	printf("\n");
+
 	int sock[TAM];
 	socklen_t slen[TAM];
 	struct sockaddr_in escravo[TAM];
@@ -86,13 +92,17 @@ int main (int argc, char* argv[]) {
 			return 1;
 		}
 	}
+
 	int vetor[TAM];
 
 	for (int i = 0; i < TAM; i++) {
 		for (int j = 0; j < TAM; j++) {
 			vetor[j] = matrizA[i][j];
 		}
-
+		if (sendto(sock[i], &TAM, sizeof(int), 0, (struct sockaddr *) &escravo[i], slen[i]) == -1) {
+			printf("Erro ao enviar pacote.\n");
+			return 1;
+		}
 		if (sendto(sock[i], vetor, sizeof(int) * TAM, 0, (struct sockaddr *) &escravo[i], slen[i]) == -1) {
 			printf("Erro ao enviar pacote.\n");
 			return 1;
